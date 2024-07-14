@@ -1,15 +1,15 @@
 // src/pages/CreateTask.js
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { auth } from '../firebase';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { auth } from "../firebase";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CreateTask = () => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [status, setStatus] = useState('To-do');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [status, setStatus] = useState("To-do");
   const [loading, setLoading] = useState(false);
   const [hasTasks, setHasTasks] = useState(false);
   const navigate = useNavigate();
@@ -19,16 +19,19 @@ const CreateTask = () => {
       const user = auth.currentUser;
       if (user) {
         try {
-          const response = await axios.get(`http://localhost:5000/tasks/${user.uid}`, {
-            headers: {
-              Authorization: `Bearer ${user.accessToken}`,
-            },
-          });
+          const response = await axios.get(
+            `${import.meta.env.VITE_SERVER_URL}/tasks/${user.uid}`,
+            {
+              headers: {
+                Authorization: `Bearer ${user.accessToken}`,
+              },
+            }
+          );
           if (response.data.length > 0) {
             setHasTasks(true);
           }
         } catch (error) {
-          console.error('Error fetching tasks:', error);
+          console.error("Error fetching tasks:", error);
         }
       }
     };
@@ -38,7 +41,7 @@ const CreateTask = () => {
   const handleCreateTask = async (e) => {
     e.preventDefault();
     if (!title) {
-      toast.error('Title is required');
+      toast.error("Title is required");
       return;
     }
 
@@ -54,28 +57,32 @@ const CreateTask = () => {
       setLoading(true);
 
       try {
-        const response = await axios.post('http://localhost:5000/tasks', newTask, {
-          headers: {
-            Authorization: `Bearer ${user.accessToken}`,
-          },
-        });
-        console.log('Task creation response:', response.data);
-        setTitle('');
-        setDescription('');
-        setStatus('To-do');
-        toast.success('Task created successfully!');
+        const response = await axios.post(
+          `${import.meta.env.VITE_SERVER_URL}/tasks`,
+          newTask,
+          {
+            headers: {
+              Authorization: `Bearer ${user.accessToken}`,
+            },
+          }
+        );
+        console.log("Task creation response:", response.data);
+        setTitle("");
+        setDescription("");
+        setStatus("To-do");
+        toast.success("Task created successfully!");
         setLoading(false);
-        navigate('/task-list');
+        navigate("/task-list");
       } catch (error) {
-        console.error('Task creation failed:', error);
+        console.error("Task creation failed:", error);
         if (error.response) {
-          console.error('Response data:', error.response.data);
+          console.error("Response data:", error.response.data);
         }
-        toast.error('Failed to create task');
+        toast.error("Failed to create task");
         setLoading(false);
       }
     } else {
-      toast.error('You need to be logged in to create a task');
+      toast.error("You need to be logged in to create a task");
     }
   };
 
@@ -95,7 +102,9 @@ const CreateTask = () => {
           />
         </div>
         <div>
-          <label className="block text-gray-700 font-medium mb-2">Description</label>
+          <label className="block text-gray-700 font-medium mb-2">
+            Description
+          </label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -119,16 +128,16 @@ const CreateTask = () => {
           <button
             type="submit"
             className={`bg-blue-500 text-white px-6 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-              loading ? 'opacity-50 cursor-not-allowed' : ''
+              loading ? "opacity-50 cursor-not-allowed" : ""
             }`}
             disabled={loading}
           >
-            {loading ? 'Creating...' : 'Create Task'}
+            {loading ? "Creating..." : "Create Task"}
           </button>
           {hasTasks && (
             <button
               type="button"
-              onClick={() => navigate('/task-list')}
+              onClick={() => navigate("/task-list")}
               className="ml-4 bg-gray-500 text-white px-6 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
             >
               View Task List

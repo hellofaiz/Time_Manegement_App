@@ -17,7 +17,7 @@ const TaskList = () => {
       if (user) {
         try {
           const response = await axios.get(
-            `http://localhost:5000/tasks/${user.uid}`,
+            `${import.meta.env.VITE_SERVER_URL}/tasks/${user.uid}`,
             {
               headers: {
                 Authorization: `Bearer ${user.accessToken}`,
@@ -41,11 +41,14 @@ const TaskList = () => {
     const user = auth.currentUser;
     if (user) {
       try {
-        await axios.delete(`http://localhost:5000/tasks/${taskId}`, {
-          headers: {
-            Authorization: `Bearer ${user.accessToken}`,
-          },
-        });
+        await axios.delete(
+          `${import.meta.env.VITE_SERVER_URL}/tasks/${taskId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${user.accessToken}`,
+            },
+          }
+        );
         setTasks(tasks.filter((task) => task.id !== taskId));
         toast.success("Task deleted successfully!");
       } catch (error) {
@@ -64,7 +67,7 @@ const TaskList = () => {
     if (user && editingTask) {
       try {
         await axios.put(
-          `http://localhost:5000/tasks/${editingTask.id}`,
+          `${import.meta.env.VITE_SERVER_URL}/tasks/${editingTask.id}`,
           editingTask,
           {
             headers: {
@@ -152,11 +155,11 @@ const TaskList = () => {
                     <td className="px-4 py-2 ">{task.description}</td>
                     <td className="px-2 text-center py-2 ">
                       <span
-                        className={`px-2 py-1 rounded-full text text-white ${
+                        className={`px-2 py-1 rounded-full text text-black ${
                           task.status === "To-do"
                             ? "bg-gray-200 text-black text-xs"
                             : task.status === "Progress"
-                            ? "bg-blue-500 text-white text-xs"
+                            ? "bg-blue-500 text-black text-xs"
                             : "bg-green-500 text-black text-xs"
                         }`}
                       >

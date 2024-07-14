@@ -29,12 +29,15 @@ const Navbar = () => {
         const user = result.user;
         console.log("user", user);
         const { email, displayName, photoURL, uid } = user;
-        await axios.post("http://localhost:5000/users/register", {
-          email,
-          name: displayName,
-          photo: photoURL,
-          uid,
-        });
+        await axios.post(
+          `${import.meta.env.VITE_SERVER_URL}/users/register`,
+          {
+            email,
+            name: displayName,
+            photo: photoURL,
+            uid,
+          }
+        );
         setUser(user);
         navigate("/create-task");
       })
@@ -88,7 +91,7 @@ const Navbar = () => {
             onClick={signInWithGoogle}
             className="bg-blue-500 text-white px-4 py-2 rounded"
           >
-            Login / Signup
+            Login 
           </button>
         )}
       </div>
